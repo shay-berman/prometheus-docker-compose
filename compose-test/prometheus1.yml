@@ -1,0 +1,10 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: prom1
+
+scrape_configs:
+  - job_name: redis_exporter1
+    static_configs:
+    - targets: ['redis-exporter1:9121']

@@ -1,0 +1,59 @@
+version: '3'
+services:
+    # === redis1 + exporter1 + prometheus1 to monitor redis1 ===
+    redis1:
+     image: redis
+     ports:
+     - 6379:6379
+
+    redis-exporter1:
+      image: oliver006/redis_exporter
+      command: -redis.addr redis://redis1:6379
+      ports:
+      - 9121:9121
+
+    prometheus1:
+        image: prom/prometheus
+        ports:
+            - 9091:9090
+        volumes:
+            - ./prometheus1.yml:/etc/prometheus/prometheus.yml
+
+
+    # === redis2 + exporter2 + prometheus2 to monitor redis2 ===
+    redis2:
+     image: redis
+     ports:
+     - 6380:6379
+
+    redis-exporter2:
+      image: oliver006/redis_exporter
+      command: -redis.addr redis://redis2:6379
+      ports:
+      - 9122:9121
+
+    prometheus2:
+        image: prom/prometheus
+        ports:
+            - 9092:9090
+        volumes:
+            - ./prometheus2.yml:/etc/prometheus/prometheus.yml
+
+
+    # === prometheus as remote_read for prometheus1\2 + grafana ===
+    prometheus-read:
+        image: prom/prometheus
+        ports:
+            - 9090:9090
+        volumes:
+            - ./prometheus-read.yml:/etc/prometheus/prometheus.yml
+
+    grafana-ui:
+        image: grafana/grafana
+        ports:
+            - 3000:3000
+        environment:
+            - GF_SECURITY_ADMIN_PASSWORD=secret
+        volumes:
+            - ./provisioning:/etc/grafana/provisioning/datasources
+
