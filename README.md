@@ -13,3 +13,8 @@ docker-compose up -d
 - Open browser [grafana](http://localhost:3000/) which define with prometheus-read as datasource. Try to query `redis_up` metric - if works then remote_read works. 
 
 But for some reason the prometheus-read does not see the metrics from prometheus1 nor prometheus2.
+This is the error you will see in the prometheus-read while trying to query redis_up:
+```
+remote_read: remote server http://prometheus1:9090/read returned HTTP status 404 Not Found: 404 page not found
+remote_read: remote server http://prometheus2:9090/read returned HTTP status 404 Not Found: 404 page not found
+```
